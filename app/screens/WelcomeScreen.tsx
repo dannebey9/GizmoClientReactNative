@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import {
+  Button,
   Text,
 } from "../components"
 import { isRTL } from "../i18n"
@@ -10,12 +11,12 @@ import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import { AppStackScreenProps } from "../navigators"
 
 
-const welcomeLogo = require("../../assets/images/logo.png")
+const welcomeLogo = require("../../assets/images/logo-debitsoft.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
 
 interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
 
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(
+export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen({navigation}
 ) {
 
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
@@ -37,6 +38,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
 
       <View style={[$bottomContainer, $bottomContainerInsets]}>
         <Text tx="welcomeScreen.postscript" size="md" />
+        <Button preset={"primaryFilled"}  tx="welcomeScreen.button" onPress={() => navigation.replace("Connections")} />
       </View>
     </View>
   )
@@ -66,7 +68,7 @@ const $bottomContainer: ViewStyle = {
   justifyContent: "space-around",
 }
 const $welcomeLogo: ImageStyle = {
-  height: 88,
+  height: 150,
   width: "100%",
   marginBottom: spacing.xxl,
 }

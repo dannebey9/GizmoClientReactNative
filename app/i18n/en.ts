@@ -9,6 +9,21 @@ const en = {
       "psst  — This probably isn't what your app looks like. (Unless your designer handed you these screens, and in that case, ship it!)",
     readyForLaunch: "Your app, almost ready for launch!",
     exciting: "(ohh, this is exciting!)",
+    button: "Let's do this!",
+  },
+  connectionsScreen: {
+    title: "My Connections",
+    listEmptyText: "No connections yet",
+    btnAddConnection: "Add Connection",
+  },
+  addConnectionScreen: {
+    title: "Add Connection",
+    namePlaceholder: "Connection Name",
+    addressPlaceholder: "Connection ip address or domain",
+    portPlaceholder: "Connection port",
+    usernamePlaceholder: "Username",
+    passwordPlaceholder: "Password",
+    btnSave: "Add Connection",
   },
   errorScreen: {
     title: "Something went wrong!",
