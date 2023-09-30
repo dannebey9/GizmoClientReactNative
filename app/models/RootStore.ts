@@ -1,9 +1,11 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { ConnectionsModel } from "./Connections"
 
 /**
  * A RootStore model.
  */
 export const RootStoreModel = types.model("RootStore").props({
+  connections: types.optional(ConnectionsModel, {}),
 })
 
 /**
