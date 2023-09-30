@@ -5,7 +5,7 @@ import { ConnectionsModel } from "./Connections"
  * A RootStore model.
  */
 export const RootStoreModel = types.model("RootStore").props({
-  connections: types.optional(ConnectionsModel, {}),
+  connectionsStore: types.optional(ConnectionsModel, {}),
 })
 
 /**
