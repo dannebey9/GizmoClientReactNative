@@ -1,5 +1,5 @@
 export * from "./WelcomeScreen"
 export * from "./ErrorScreen/ErrorBoundary"
 // export other screens here
-export * from "./ConnectionsScreen"
-export * from "./AddConnectionScreen"
+export * from "./Connections/ConnectionsScreen"
+export * from "./Connections/AddConnectionScreen"
