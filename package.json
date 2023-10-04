@@ -34,6 +34,7 @@
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@expo/metro-config": "^0.7.1",
     "@expo/webpack-config": "18.1.2",
+    "@hookform/resolvers": "^3.3.1",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.2",
@@ -56,7 +57,9 @@
     "mobx": "6.6.0",
     "mobx-react-lite": "3.4.0",
     "mobx-state-tree": "5.1.5",
+    "nanoid": "^5.0.1",
     "react": "18.2.0",
+    "react-hook-form": "^7.46.2",
     "react-native": "0.71.7",
     "react-native-bootsplash": "4.5.0",
     "react-native-gesture-handler": "~2.9.0",
@@ -65,7 +68,8 @@
     "react-native-screens": "~3.20.0",
     "reactotron-mst": "3.1.4",
     "reactotron-react-js": "^3.3.7",
-    "reactotron-react-native": "5.0.3"
+    "reactotron-react-native": "5.0.3",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
