@@ -1,29 +1,24 @@
 import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import {
-  Button,
-  Text,
-} from "../components"
+import { Button, Screen, Text } from "../components"
 import { isRTL } from "../i18n"
 import { colors, spacing } from "../theme"
 import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import { AppStackScreenProps } from "../navigators"
-
 
 const welcomeLogo = require("../../assets/images/logo-debitsoft.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
 
 interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
 
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen({navigation}
-) {
-
+export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen({
+  navigation,
+}) {
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
 
-
   return (
-    <View style={$container}>
+    <Screen safeAreaEdges={["top"]} contentContainerStyle={$container}>
       <View style={$topContainer}>
         <Image style={$welcomeLogo} source={welcomeLogo} resizeMode="contain" />
         <Text
@@ -38,9 +33,13 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
 
       <View style={[$bottomContainer, $bottomContainerInsets]}>
         <Text tx="welcomeScreen.postscript" size="md" />
-        <Button preset={"primaryFilled"}  tx="welcomeScreen.button" onPress={() => navigation.replace("Connections")} />
+        <Button
+          preset={"primaryFilled"}
+          tx="welcomeScreen.button"
+          onPress={() => navigation.replace("Connections")}
+        />
       </View>
-    </View>
+    </Screen>
   )
 })
 
