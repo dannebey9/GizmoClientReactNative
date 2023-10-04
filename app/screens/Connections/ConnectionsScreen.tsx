@@ -30,7 +30,7 @@ export const ConnectionsScreen: FC<ConnectionsScreenProps> = observer(function C
         extraData={connectionsStore.connections.length}
         renderItem={({ item, index }) => (
           <ConnectionItem
-            onDelete={() => connectionsStore.deleteConnection(item.name)}
+            onDelete={() => connectionsStore.deleteConnection(item.id)}
             onEdit={() => console.log("edit")}
             key={index}
             connection={{
