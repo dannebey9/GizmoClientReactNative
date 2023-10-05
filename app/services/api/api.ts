@@ -5,14 +5,10 @@
  * See the [Backend API Integration](https://github.com/infinitered/ignite/blob/master/docs/Backend-API-Integration.md)
  * documentation for more details.
  */
-import {
-  ApisauceInstance,
-  create,
-} from "apisauce"
+import { ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
-import type {
-  ApiConfig,
-} from "./api.types"
+import type { ApiConfig } from "./api.types"
+import { _rootStore } from "../../models"
 
 /**
  * Configuring the apisauce instance.
@@ -43,8 +39,22 @@ export class Api {
       },
     })
   }
-
 }
 
 // Singleton instance of the API for convenience
 export const api = new Api()
+
+api.apisauce.addAsyncRequestTransform(async (request) => {
+  console.log("request", request)
+  request.auth = {
+    username: _rootStore.connectionsStore.getSelectedConnection.username,
+    password: _rootStore.connectionsStore.getSelectedConnection.password,
+  }
+  console.log("request", request)
+  request.baseURL = `${_rootStore.connectionsStore.getSelectedConnection.protocol}://${_rootStore.connectionsStore.getSelectedConnection.address}:${_rootStore.connectionsStore.getSelectedConnection.port}/api`
+})
+
+api.apisauce.addMonitor((response) => {
+  console.log("response", response.data)
+  // console.log("response", response.config)
+})

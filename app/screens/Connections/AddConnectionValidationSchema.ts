@@ -12,7 +12,7 @@ export const AddConnectionValidationSchema = z.object({
     .max(50, "Address must be at most 50 characters long"),
   port: z
     .string()
-    .min(3, "Port must be at least 3 characters long")
+    .min(2, "Port must be at least 3 characters long")
     .max(50, "Port must be at most 50 characters long"),
   username: z
     .string()
@@ -22,4 +22,5 @@ export const AddConnectionValidationSchema = z.object({
     .string()
     .min(3, "Password must be at least 3 characters long")
     .max(50, "Password must be at most 50 characters long"),
+  protocol: z.enum(["http", "https"]),
 })

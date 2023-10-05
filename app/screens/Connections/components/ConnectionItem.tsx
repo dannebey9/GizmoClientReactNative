@@ -5,6 +5,7 @@ import { Text } from "../../../components"
 import { ConnectionType } from "../../../models"
 import React, { FC } from "react"
 import Swipeable from "react-native-gesture-handler/Swipeable"
+import { Ionicons } from "@expo/vector-icons"
 
 const widthBtn = 75
 
@@ -12,11 +13,13 @@ interface ConnectionItemProps {
   connection: ConnectionType
   onDelete: () => void
   onEdit: () => void
+  onOpen: () => void
 }
 export const ConnectionItem: FC<ConnectionItemProps> = observer(function ConnectionItem({
   connection,
   onDelete,
   onEdit,
+  onOpen,
 }) {
   const onPressDelete = () => {
     swipeableRef.current?.close()
@@ -43,9 +46,7 @@ export const ConnectionItem: FC<ConnectionItemProps> = observer(function Connect
               { opacity: opacityDelete, backgroundColor: colors.palette.angry100 },
             ]}
           >
-            <Animated.Text style={[$actionText, { color: colors.palette.angry600 }]}>
-              Delete
-            </Animated.Text>
+            <Ionicons name="trash-outline" size={30} color={colors.palette.angry600} />
           </Animated.View>
         </TouchableOpacity>
       </>
@@ -66,9 +67,7 @@ export const ConnectionItem: FC<ConnectionItemProps> = observer(function Connect
               { opacity: opacityEdit, backgroundColor: colors.palette.primary100 },
             ]}
           >
-            <Animated.Text style={[$actionText, { color: colors.palette.primary600 }]}>
-              Edit
-            </Animated.Text>
+            <Ionicons name="cog-outline" size={30} color={colors.palette.primary600} />
           </Animated.View>
         </TouchableOpacity>
       </>
@@ -82,15 +81,17 @@ export const ConnectionItem: FC<ConnectionItemProps> = observer(function Connect
       ref={swipeableRef}
       leftThreshold={2}
     >
-      <Animated.View style={$itemContainer}>
-        <View style={$firstRowContainer}>
-          <Text preset={"subheading"}>{connection.name}</Text>
-          <Text preset={"formHelper"}>
-            {connection.address}:{connection.port}
-          </Text>
-        </View>
-        <Text preset={"formHelper"}>{connection.username}</Text>
-      </Animated.View>
+      <TouchableOpacity onPress={onOpen}>
+        <Animated.View style={$itemContainer}>
+          <View style={$firstRowContainer}>
+            <Text preset={"subheading"}>{connection.name}</Text>
+            <Text preset={"formHelper"}>
+              {connection.address}:{connection.port}
+            </Text>
+          </View>
+          <Text preset={"formHelper"}>{connection.username}</Text>
+        </Animated.View>
+      </TouchableOpacity>
     </Swipeable>
   )
 })
@@ -98,7 +99,7 @@ export const ConnectionItem: FC<ConnectionItemProps> = observer(function Connect
 const $itemContainer: ViewStyle = {
   height: 100,
   marginHorizontal: 10,
-  backgroundColor: colors.palette.neutral400,
+  backgroundColor: colors.palette.neutral100,
   borderRadius: 10,
   padding: 10,
   marginVertical: 10,

@@ -13,6 +13,7 @@ import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
+import { useStores } from "../models"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -31,7 +32,9 @@ export type AppStackParamList = {
   Welcome: undefined
   // 🔥 Your screens go here
   Connections: undefined
-  AddConnection: undefined
+  AddConnection: { connectionId?: string }
+  ClubConnection: undefined
+  ClubHosts: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -50,6 +53,7 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
+  const { connectionsStore, appSettingsStore } = useStores()
   return (
     <Stack.Navigator
       screenOptions={{
@@ -58,11 +62,26 @@ const AppStack = observer(function AppStack() {
         headerTitleAlign: "center",
       }}
     >
-      <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
-      {/** 🔥 Your screens go here */}
+      {appSettingsStore.welcomeScreenViewed ? null : (
+        <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
+      )}
 
-      <Stack.Screen name="Connections" component={Screens.ConnectionsScreen} />
-      <Stack.Screen name="AddConnection" component={Screens.AddConnectionScreen} />
+      {connectionsStore.selectedConnection ? (
+        <Stack.Group navigationKey={"Club"}>
+          <Stack.Screen name="ClubConnection" component={Screens.ClubConnectionScreen} />
+          <Stack.Screen name="ClubHosts" component={Screens.ClubHostsScreen} />
+        </Stack.Group>
+      ) : (
+        <Stack.Group navigationKey={"Connection"}>
+          <Stack.Screen name="Connections" component={Screens.ConnectionsScreen} />
+          <Stack.Screen
+            name="AddConnection"
+            component={Screens.AddConnectionScreen}
+            options={{ presentation: "modal" }}
+          />
+        </Stack.Group>
+      )}
+
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )

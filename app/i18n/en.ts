@@ -15,6 +15,11 @@ const en = {
     title: "My Connections",
     listEmptyText: "No connections yet",
     btnAddConnection: "Add Connection",
+    btnDeleteConnection: "Delete",
+    btnEditConnection: "Edit",
+  },
+  clubHostsScreen: {
+    title: "Club Hosts",
   },
   addConnectionScreen: {
     title: "Add Connection",
@@ -24,6 +29,12 @@ const en = {
     usernamePlaceholder: "Username",
     passwordPlaceholder: "Password",
     btnSave: "Add Connection",
+    btnUpdate: "Update Connection",
+  },
+  clubConnectionScreen: {
+    title: "Club Connection",
+    loadingText: "We are trying to connect to the club...",
+    btnCancel: "Cancel",
   },
   errorScreen: {
     title: "Something went wrong!",

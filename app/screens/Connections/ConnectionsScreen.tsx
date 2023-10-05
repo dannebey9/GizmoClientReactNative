@@ -4,7 +4,7 @@ import { FlatList, View, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Button, Screen, Text } from "app/components"
 import { useHeader } from "../../utils/useHeader"
-import { spacing } from "../../theme"
+import { colors, spacing } from "../../theme"
 import { $container } from "../../theme/presetStyles"
 import { useStores } from "../../models"
 import { ConnectionItem } from "./components/ConnectionItem"
@@ -19,19 +19,19 @@ export const ConnectionsScreen: FC<ConnectionsScreenProps> = observer(function C
   useHeader({
     titleTx: "connectionsScreen.title",
     rightIcon: "plus",
+    // leftText: connectionsStore.connections.length.toString(),
     onRightPress: () => navigation.navigate("AddConnection"),
   })
   return (
     <Screen style={$root} preset="fixed" contentContainerStyle={[$container, $connectionContainer]}>
-      {/* <Text>{connectionsStore.connections.length}</Text> */}
       <FlatList
         data={connectionsStore.connections}
-        // keyExtractor={(item) => item.address}
-        extraData={connectionsStore.connections.length}
+        extraData={JSON.stringify(connectionsStore.connections)}
         renderItem={({ item, index }) => (
           <ConnectionItem
             onDelete={() => connectionsStore.deleteConnection(item.id)}
-            onEdit={() => console.log("edit")}
+            onEdit={() => navigation.navigate("AddConnection", { connectionId: item.id })}
+            onOpen={() => connectionsStore.selectConnection(item.id)}
             key={index}
             connection={{
               id: item.id,

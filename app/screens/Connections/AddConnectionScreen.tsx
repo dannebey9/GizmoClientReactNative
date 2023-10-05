@@ -1,16 +1,17 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle } from "react-native"
+import { TouchableOpacity, View, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
-import { Button, Screen, TextField } from "app/components"
+import { Button, Screen, TextField, Text } from "app/components"
 import { useHeader } from "../../utils/useHeader"
 import { $container } from "../../theme/presetStyles"
 import { colors, spacing } from "../../theme"
-import { ConnectionType, useStores } from "../../models"
-import { useForm, Controller, Control } from "react-hook-form"
+import { ConnectionType, Protocol, useStores } from "../../models"
+import { Control, Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AddConnectionValidationSchema } from "./AddConnectionValidationSchema"
 import { TxKeyPath } from "../../i18n"
+import SelectField from "../../components/SelectField"
 
 interface AddConnectionScreenProps extends AppStackScreenProps<"AddConnection"> {}
 
@@ -46,24 +47,48 @@ const ControlledTextField: FC<ControlledTextFieldProps> = ({
 }
 
 export const AddConnectionScreen: FC<AddConnectionScreenProps> = observer(
-  function AddConnectionScreen({ navigation }) {
+  function AddConnectionScreen({ navigation, route }) {
     const { connectionsStore } = useStores()
     const {
       formState: { errors, isValid },
       handleSubmit,
       control,
       trigger,
+      setValue,
     } = useForm<Omit<ConnectionType, "$nonEmptyObject">>({
       resolver: zodResolver(AddConnectionValidationSchema),
+      defaultValues: {
+        // protocol: Protocol.HTTPS,
+      },
     })
+
+    useEffect(() => {
+      if (route.params?.connectionId) {
+        const connection = connectionsStore.connectionFromId(route.params.connectionId)
+        if (connection) {
+          setValue("name", connection.name)
+          setValue("address", connection.address)
+          setValue("port", connection.port)
+          setValue("username", connection.username)
+          setValue("password", connection.password)
+          setValue("protocol", connection.protocol)
+        }
+      }
+    }, [route.params?.connectionId])
 
     useHeader({
       titleTx: "addConnectionScreen.title",
       leftIcon: "back",
+
       onLeftPress: () => navigation.goBack(),
     })
 
     const onSubmit = (data: ConnectionType) => {
+      if (route.params?.connectionId) {
+        connectionsStore.updateConnection(route.params.connectionId, data)
+        navigation.goBack()
+        return
+      }
       connectionsStore.addConnection(data)
       navigation.goBack()
     }
@@ -115,10 +140,79 @@ export const AddConnectionScreen: FC<AddConnectionScreenProps> = observer(
             placeholderTx="addConnectionScreen.passwordPlaceholder"
             handleOnChangeText={handleOnChangeText}
           />
+          <Controller
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  height: 40,
+                  padding: spacing.xxxs,
+                  borderWidth: 1,
+                  borderRadius: spacing.sm,
+                  gap: spacing.xs,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    backgroundColor:
+                      value !== Protocol.HTTP
+                        ? colors.palette.neutral200
+                        : colors.palette.primary600,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: spacing.sm,
+                  }}
+                  onPress={() => handleOnChangeText(Protocol.HTTP, onChange)}
+                >
+                  <Text
+                    style={{
+                      color:
+                        value !== Protocol.HTTP
+                          ? colors.palette.primary600
+                          : colors.palette.neutral100,
+                    }}
+                  >
+                    HTTP
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    backgroundColor:
+                      value !== Protocol.HTTPS
+                        ? colors.palette.neutral200
+                        : colors.palette.primary600,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: spacing.sm,
+                  }}
+                  onPress={() => handleOnChangeText(Protocol.HTTPS, onChange)}
+                >
+                  <Text
+                    style={{
+                      color:
+                        value !== Protocol.HTTPS
+                          ? colors.palette.primary600
+                          : colors.palette.neutral100,
+                    }}
+                  >
+                    HTTPS
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            name={"protocol"}
+          />
         </View>
         <Button
           disabled={!isValid}
-          tx={"addConnectionScreen.btnSave"}
+          tx={
+            route.params?.connectionId
+              ? "addConnectionScreen.btnUpdate"
+              : "addConnectionScreen.btnSave"
+          }
           onPress={handleSubmit(onSubmit)}
         />
       </Screen>

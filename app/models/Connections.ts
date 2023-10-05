@@ -1,5 +1,11 @@
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import "react-native-get-random-values"
 import { nanoid } from "nanoid"
+
+export enum Protocol {
+  HTTP = "http",
+  HTTPS = "https",
+}
 
 export const ConnectionModel = types.model("Connection", {
   id: types.identifier,
@@ -8,6 +14,7 @@ export const ConnectionModel = types.model("Connection", {
   name: types.string,
   username: types.string,
   password: types.string,
+  protocol: types.enumeration(Object.values(Protocol)),
 })
 
 export type ConnectionType = Instance<typeof ConnectionModel>
@@ -18,9 +25,23 @@ export const ConnectionsModel = types
     connections: types.optional(types.array(ConnectionModel), []),
     selectedConnection: types.maybe(types.reference(ConnectionModel)),
   })
+  .views((self) => ({
+    get connectionFromId() {
+      return (id: string) => self.connections.find((c) => c.id === id)
+    },
+    get getSelectedConnection() {
+      return self.connections.find((c) => c.id === self.selectedConnection?.id)
+    },
+  }))
   .actions((self) => ({
     addConnection(connection: Omit<SnapshotIn<typeof ConnectionModel>, "id">) {
-      self.connections.push({ ...connection, id: nanoid() })
+      console.warn("addConnection", connection)
+      const newConnection = ConnectionModel.create({
+        ...connection,
+        id: nanoid(),
+      })
+      self.connections.replace(self.connections.concat(newConnection))
+      // self.connections.push(newConnection)
     },
     updateConnection(id: string, newConnection: SnapshotIn<typeof ConnectionModel>) {
       const connectionToUpdate = self.connections.find((c) => c.id === id)
@@ -39,6 +60,9 @@ export const ConnectionsModel = types
       if (connectionToSelect) {
         self.selectedConnection = connectionToSelect
       }
+    },
+    deselectConnection() {
+      self.selectedConnection = undefined
     },
     // TODO: проверка доступности подключения
     async checkConnectionAvailability(id: string) {

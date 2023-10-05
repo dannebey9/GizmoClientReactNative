@@ -3,18 +3,18 @@ import { RootStore, RootStoreModel } from "../RootStore"
 import { setupRootStore } from "./setupRootStore"
 
 /**
- * Create the initial (empty) global RootStore instance here.
+ * Создайте здесь начальный (пустой) глобальный экземпляр RootStore.
  *
- * Later, it will be rehydrated in app.tsx with the setupRootStore function.
+ * Позже он будет повторно сохранен в app.tsx с помощью функции setupRootStore.
  *
- * If your RootStore requires specific properties to be instantiated,
- * you can do so here.
+ * Если ваш RootStore требует создания экземпляров определенных свойств,
+ * Вы можете сделать это здесь.
  *
- * If your RootStore has a _ton_ of sub-stores and properties (the tree is
- * very large), you may want to use a different strategy than immediately
- * instantiating it, although that should be rare.
+ * Если ваш RootStore имеет _тонну_ дочерних магазинов и свойств (дерево
+ * очень большой), возможно, вы захотите использовать другую стратегию, чем сейчас
+ * создание его экземпляра, хотя это должно быть редко.
  */
-const _rootStore = RootStoreModel.create({})
+export const _rootStore = RootStoreModel.create({})
 
 /**
  * The RootStoreContext provides a way to access

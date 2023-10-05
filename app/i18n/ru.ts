@@ -15,6 +15,11 @@ const ru = {
     title: "Мои подключения",
     listEmptyText: "У вас пока нет ни одного подключения",
     btnAddConnection: "Добавить подключение",
+    btnDeleteConnection: "Удалить",
+    btnEditConnection: "Редактировать",
+  },
+  clubHostsScreen: {
+    title: "Клубные хосты",
   },
   addConnectionScreen: {
     title: "Добавить подключение",
@@ -24,6 +29,12 @@ const ru = {
     usernamePlaceholder: "Имя пользователя",
     passwordPlaceholder: "Пароль",
     btnSave: "Добавить подключение",
+    btnUpdate: "Обновить подключение",
+  },
+  clubConnectionScreen: {
+    title: "Подключение к клубу",
+    loadingText: "Мы пытаемся подключиться к клубу...",
+    btnCancel: "Отмена",
   },
   errorScreen: {
     title: "Что-то пошло не так!",

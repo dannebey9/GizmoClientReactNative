@@ -6,6 +6,7 @@ import { isRTL } from "../i18n"
 import { colors, spacing } from "../theme"
 import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import { AppStackScreenProps } from "../navigators"
+import { useStores } from "../models"
 
 const welcomeLogo = require("../../assets/images/logo-debitsoft.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
@@ -17,6 +18,12 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
 }) {
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
 
+  const { appSettingsStore, connectionsStore } = useStores()
+
+  const handleWelcomeBtn = () => {
+    appSettingsStore.setProp("welcomeScreenViewed", true)
+    navigation.replace(connectionsStore.selectedConnection ? "ClubConnection" : "Connections")
+  }
   return (
     <Screen safeAreaEdges={["top"]} contentContainerStyle={$container}>
       <View style={$topContainer}>
@@ -33,11 +40,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
 
       <View style={[$bottomContainer, $bottomContainerInsets]}>
         <Text tx="welcomeScreen.postscript" size="md" />
-        <Button
-          preset={"primaryFilled"}
-          tx="welcomeScreen.button"
-          onPress={() => navigation.replace("Connections")}
-        />
+        <Button preset={"primaryFilled"} tx="welcomeScreen.button" onPress={handleWelcomeBtn} />
       </View>
     </Screen>
   )

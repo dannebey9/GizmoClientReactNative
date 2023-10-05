@@ -2,38 +2,67 @@
  * These types indicate the shape of the data you expect to receive from your
  * API endpoint, assuming it's a JSON object like we have.
  */
-export interface EpisodeItem {
-  title: string
-  pubDate: string
-  link: string
-  guid: string
-  author: string
-  thumbnail: string
-  description: string
-  content: string
-  enclosure: {
-    link: string
-    type: string
-    length: number
-    duration: number
-    rating: { scheme: string; value: string }
-  }
-  categories: string[]
+
+// HOST GROUPS
+export type HostGroupsSuccessResponse = GizmoBaseResponse<
+  Gizmo_SuccessResponse<
+    {
+      id: string
+      name: string
+      skinName: string
+      applicationGroupId: string
+      securityProfileId: string
+      defaultGuestGroupId: string
+    }[]
+  >
+>
+
+// HOSTS
+export type HostsSuccessResponse = GizmoBaseResponse<
+  Gizmo_SuccessResponse<{
+    id: number
+    hostType: number
+    hostGroupId: number | null
+    number: number
+    name: string | null
+    isOutOfOrder: boolean
+    isLocked: boolean
+    iconId: number | null
+    isDeleted: boolean
+    hostComputer: {
+      windowsName: string | null
+      macAddress: string | null
+    } | null
+    hostEndpoint: {
+      maximumUsers: number | null
+    } | null
+  }>
+>
+
+interface Gizmo_SuccessResponse<T> {
+  data: T
+  nextCursor: string
+  prevCursor: string
 }
 
-export interface ApiFeedResponse {
-  status: string
-  feed: {
-    url: string
-    title: string
-    link: string
-    author: string
-    description: string
-    image: string
-  }
-  items: EpisodeItem[]
+interface GizmoBaseResponse<T> {
+  httpStatusCode: number
+  isError: boolean
+  message: string | null
+  result: T
+  version: string | null
 }
 
+export interface Gizmo_ErrorResponse {
+  httpStatusCode: number
+  message: string
+  isError: boolean
+  errorCodeType: number
+  errorCodeTypeReadable: string
+  errorCode: number
+  errorCodeReadable: string
+  errors: []
+}
 /**
  * The options used to configure apisauce.
  */
@@ -44,7 +73,7 @@ export interface ApiConfig {
   url: string
 
   /**
-   * Milliseconds before we timeout the request.
+   * Milliseconds before we time out the request.
    */
   timeout: number
 }
