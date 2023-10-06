@@ -40,6 +40,7 @@ export const ConnectionsScreen: FC<ConnectionsScreenProps> = observer(function C
               port: item.port,
               username: item.username,
               password: item.password,
+              protocol: item.protocol,
             }}
           />
         )}

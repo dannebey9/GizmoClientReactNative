@@ -39,6 +39,26 @@ export type HostsSuccessResponse = GizmoBaseResponse<
   }>
 >
 
+// USER SESSIONS
+export type UserSessionsSuccessResponse = GizmoBaseResponse<
+  {
+    username: number | null
+    userId: number
+    span: number
+    lastLogin: Date | null
+    lastLogout: Date | null
+    hostId: number
+    hostName: string | null
+    hostNumber: number
+    userGroupName: string | null
+    userGroupId: number | null
+    hostGroupName: string | null
+    hostGroupId: number | null
+    sessionState: number
+    slot: number
+  }[]
+>
+
 interface Gizmo_SuccessResponse<T> {
   data: T
   nextCursor: string

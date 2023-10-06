@@ -40,12 +40,33 @@ export const ClubConnectionScreen: FC<ClubConnectionScreenProps> = observer(
           marginBottom: spacing.lg,
         }}
       >
-        <View style={{ flex: 1, justifyContent: "center", gap: spacing.xl }}>
-          <ActivityIndicator size="large" color={colors.palette.primary600} />
-          <Text
-            style={{ color: colors.palette.primary300 }}
-            tx={"clubConnectionScreen.loadingText"}
-          />
+        <View style={{ flex: 1, justifyContent: "center", gap: spacing.xl, alignItems: "center" }}>
+          {clubHostsStore.status === "pending" || clubHostsStore.status === "done" ? (
+            <>
+              <ActivityIndicator size="large" color={colors.palette.primary600} />
+              <Text
+                style={{ color: colors.palette.primary300 }}
+                tx={"clubConnectionScreen.loadingText"}
+              />
+            </>
+          ) : (
+            <>
+              <Text
+                preset={"subheading"}
+                style={{
+                  color: colors.palette.angry300,
+                }}
+                tx={"clubConnectionScreen.errorText"}
+              />
+              <Text
+                style={{
+                  color: colors.palette.angry300,
+                }}
+                preset={"formLabel"}
+                tx={"clubConnectionScreen.errorDescription"}
+              />
+            </>
+          )}
         </View>
         <Button
           style={{ marginTop: spacing.xl, width: "100%" }}

@@ -6,6 +6,7 @@ import { ConnectionType } from "../../../models"
 import React, { FC } from "react"
 import Swipeable from "react-native-gesture-handler/Swipeable"
 import { Ionicons } from "@expo/vector-icons"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 const widthBtn = 75
 
@@ -74,25 +75,28 @@ export const ConnectionItem: FC<ConnectionItemProps> = observer(function Connect
     )
   }
   return (
-    <Swipeable
-      renderLeftActions={renderLeftActions}
-      renderRightActions={renderRightActions}
-      friction={2}
-      ref={swipeableRef}
-      leftThreshold={2}
-    >
-      <TouchableOpacity onPress={onOpen}>
-        <Animated.View style={$itemContainer}>
-          <View style={$firstRowContainer}>
-            <Text preset={"subheading"}>{connection.name}</Text>
-            <Text preset={"formHelper"}>
-              {connection.address}:{connection.port}
-            </Text>
-          </View>
-          <Text preset={"formHelper"}>{connection.username}</Text>
-        </Animated.View>
-      </TouchableOpacity>
-    </Swipeable>
+    <GestureHandlerRootView>
+      <Swipeable
+        renderLeftActions={renderLeftActions}
+        renderRightActions={renderRightActions}
+        friction={2}
+        ref={swipeableRef}
+        leftThreshold={2}
+        useNativeAnimations
+      >
+        <TouchableOpacity onPress={onOpen}>
+          <Animated.View style={$itemContainer}>
+            <View style={$firstRowContainer}>
+              <Text preset={"subheading"}>{connection.name}</Text>
+              <Text preset={"formHelper"}>
+                {connection.address}:{connection.port}
+              </Text>
+            </View>
+            <Text preset={"formHelper"}>{connection.username}</Text>
+          </Animated.View>
+        </TouchableOpacity>
+      </Swipeable>
+    </GestureHandlerRootView>
   )
 })
 

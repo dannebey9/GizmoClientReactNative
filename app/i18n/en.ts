@@ -35,6 +35,11 @@ const en = {
     title: "Club Connection",
     loadingText: "We are trying to connect to the club...",
     btnCancel: "Cancel",
+    errorText: "Error",
+    errorDescription:
+      "An error occurred while connecting to the club. Check your connection settings and try again.",
+    successText: "Success",
+    successDescription: "Successfully connected to the club.",
   },
   errorScreen: {
     title: "Something went wrong!",

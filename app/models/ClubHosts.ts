@@ -1,7 +1,28 @@
 import { flow, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
-import { HostGroupsSuccessResponse, HostsSuccessResponse } from "../services/api"
+import {
+  HostGroupsSuccessResponse,
+  HostsSuccessResponse,
+  UserSessionsSuccessResponse,
+} from "../services/api"
 import { getRootStore } from "./helpers/getRootStore"
 import { GizmoReq } from "../services/api/gizmoApi"
+
+export const UserSessionModel = types.model("UserSession", {
+  username: types.maybeNull(types.string),
+  userId: types.number,
+  span: types.number,
+  lastLogin: types.maybeNull(types.string),
+  lastLogout: types.maybeNull(types.string),
+  hostId: types.maybeNull(types.number),
+  hostName: types.maybeNull(types.string),
+  hostNumber: types.maybeNull(types.number),
+  userGroupName: types.maybeNull(types.string),
+  userGroupId: types.maybeNull(types.number),
+  hostGroupName: types.maybeNull(types.string),
+  hostGroupId: types.maybeNull(types.number),
+  sessionState: types.number,
+  slot: types.number,
+})
 
 export const HostModel = types.model("Host", {
   id: types.number,
@@ -24,6 +45,7 @@ export const HostModel = types.model("Host", {
       maximumUsers: types.number,
     }),
   ),
+  activeUserSessions: types.maybeNull(UserSessionModel),
 })
 
 export const hostGroupModel = types.model("HostGroup", {
@@ -36,23 +58,19 @@ export const hostGroupModel = types.model("HostGroup", {
   hosts: types.array(HostModel),
 })
 
+const statusModel = types.optional(
+  types.enumeration("status", ["idle", "pending", "done", "error"]),
+  "idle",
+)
+
 export const ClubHostsModel = types
   .model("ClubHosts")
   .props({
     hostGroups: types.map(types.array(hostGroupModel)),
-    hostGroupsStatus: types.optional(
-      types.enumeration("hostGroupsStatus", ["idle", "pending", "done", "error"]),
-      "idle",
-    ),
-    // hosts: types.map(types.array(HostModel)),
-    hostsStatus: types.optional(
-      types.enumeration("hostsStatus", ["idle", "pending", "done", "error"]),
-      "idle",
-    ),
-    status: types.optional(
-      types.enumeration("status", ["idle", "pending", "done", "error"]),
-      "idle",
-    ),
+    hostGroupsStatus: statusModel,
+    hostsStatus: statusModel,
+    sessionsStatus: statusModel,
+    status: statusModel,
   })
   .actions((self) => ({
     getHostGroupFromApi: flow(function* () {
@@ -74,8 +92,7 @@ export const ClubHostsModel = types
       } catch (error) {
         console.error(error)
         self.hostGroupsStatus = "error"
-      } finally {
-        self.hostGroupsStatus = "done"
+        throw new Error(error)
       }
     }),
     getHostsFromApi: flow(function* () {
@@ -85,8 +102,10 @@ export const ClubHostsModel = types
         const response = yield GizmoReq<HostsSuccessResponse>(connection, {
           method: "GET",
           endpoint: "v2.0/hosts",
+          params: {
+            "Pagination.Limit": 100,
+          },
         })
-        // self.hosts.set(connection.id, [...response.result.data])
         for (const host of response.result.data) {
           const hostGroup = self.hostGroups
             .get(connection.id)
@@ -99,10 +118,37 @@ export const ClubHostsModel = types
         }
         self.hostsStatus = "done"
       } catch (error) {
-        console.error(error)
+        console.error("getHostsFromApi: ", error)
         self.hostsStatus = "error"
-      } finally {
-        self.hostsStatus = "done"
+        throw new Error(error)
+      }
+    }),
+    getUserSessionsFromApi: flow(function* () {
+      try {
+        self.sessionsStatus = "pending"
+        const connection = getRootStore(self).connectionsStore.getSelectedConnection
+        const response = yield GizmoReq<UserSessionsSuccessResponse>(connection, {
+          method: "GET",
+          endpoint: "usersessions/activeinfo",
+        })
+        // console.log(response.result)
+        const hostGroups = self.hostGroups.get(connection.id)
+        if (hostGroups) {
+          for (const hostGroup of hostGroups) {
+            for (const host of hostGroup.hosts) {
+              const session = response.result.find((s) => s.hostId === host.id)
+              if (session) {
+                host.activeUserSessions = session
+              }
+            }
+          }
+        }
+        self.sessionsStatus = "done"
+        console.log(response)
+      } catch (error) {
+        console.error("getUserSessionsFromApi: ", error)
+        self.sessionsStatus = "error"
+        throw new Error(error)
       }
     }),
   }))
@@ -112,12 +158,11 @@ export const ClubHostsModel = types
         self.status = "pending"
         yield self.getHostGroupFromApi()
         yield self.getHostsFromApi()
+        yield self.getUserSessionsFromApi()
         self.status = "done"
       } catch (error) {
         self.status = "error"
-        console.error(error)
-      } finally {
-        self.status = "done"
+        console.error("fetchAllClubHosts: ", error)
       }
     }),
   }))

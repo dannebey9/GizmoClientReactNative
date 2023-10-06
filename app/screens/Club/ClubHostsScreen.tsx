@@ -22,10 +22,14 @@ export const ClubHostsScreen: FC<ClubHostsScreenProps> = observer(function ClubH
     <Screen
       style={$root}
       preset="scroll"
-      safeAreaEdges={["top"]}
+      // safeAreaEdges={["top"]}
       contentContainerStyle={{
         paddingHorizontal: spacing.md,
         gap: spacing.lg,
+        paddingBottom: spacing.lg,
+      }}
+      ScrollViewProps={{
+        showsVerticalScrollIndicator: false,
       }}
     >
       {clubHostsStore.groupHostsFromSelectedConnection.map((group) => (
@@ -53,15 +57,41 @@ export const ClubHostsScreen: FC<ClubHostsScreenProps> = observer(function ClubH
             <View
               key={host.id}
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 backgroundColor: colors.palette.neutral200,
-                borderRadius: 8,
                 padding: spacing.sm,
+                borderRadius: 8,
               }}
             >
-              <Text key={host.id} text={host.name} />
+              {host.activeUserSessions ? (
+                <Text
+                  style={{
+                    fontSize: 12,
+                    lineHeight: 12,
+                  }}
+                  text={`${host.activeUserSessions?.username} - ${host.activeUserSessions.userGroupName}`}
+                />
+              ) : null}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+
+                  gap: spacing.xs,
+                }}
+              >
+                <View
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: host.activeUserSessions
+                      ? colors.palette.accent200
+                      : colors.palette.neutral400,
+                  }}
+                />
+                <Text key={host.id} text={host.name} />
+              </View>
             </View>
           ))}
         </View>
