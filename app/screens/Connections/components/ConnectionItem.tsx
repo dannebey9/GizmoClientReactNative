@@ -130,10 +130,6 @@ const $rightAction: ViewStyle = {
   marginRight: 10,
 }
 
-const $actionText: TextStyle = {
-  fontWeight: "600",
-}
-
 const $firstRowContainer: ViewStyle = {
   flexDirection: "row",
   justifyContent: "space-between",

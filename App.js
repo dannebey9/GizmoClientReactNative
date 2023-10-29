@@ -6,7 +6,7 @@ import { registerRootComponent } from "expo"
 import { Platform } from "react-native"
 import * as SplashScreen from "expo-splash-screen"
 
-SplashScreen.preventAutoHideAsync()
+// SplashScreen.preventAutoHideAsync()
 
 function IgniteApp() {
   return <App hideSplashScreen={SplashScreen.hideAsync} />

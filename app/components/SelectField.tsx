@@ -11,8 +11,6 @@ import {
   TouchableWithoutFeedback,
 } from "react-native"
 import { colors, spacing, typography } from "../theme"
-import { Screen } from "./Screen"
-import { Ionicons } from "@expo/vector-icons"
 import Animated from "react-native-reanimated"
 
 export interface SelectOption {
@@ -27,7 +25,7 @@ export interface SelectProps {
   containerStyle?: StyleProp<ViewStyle>
 }
 
-const SelectField = forwardRef(function SelectField(props: SelectProps, ref) {
+const SelectField = forwardRef(function SelectField(props: SelectProps) {
   const { options, selectedValue, onValueChange, containerStyle } = props
 
   const [modalVisible, setModalVisible] = useState(false)

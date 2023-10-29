@@ -5,7 +5,7 @@ import Base64 from "../../utils/Base64"
 interface RequestOptions<T = any> {
   endpoint: string
   method?: Method
-  data?: any
+  data?: T
   headers?: Record<string, string>
   params?: Record<string, any>
   timeout?: number

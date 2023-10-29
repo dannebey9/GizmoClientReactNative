@@ -11,7 +11,6 @@ import { Control, Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AddConnectionValidationSchema } from "./AddConnectionValidationSchema"
 import { TxKeyPath } from "../../i18n"
-import SelectField from "../../components/SelectField"
 
 interface AddConnectionScreenProps extends AppStackScreenProps<"AddConnection"> {}
 
@@ -50,7 +49,7 @@ export const AddConnectionScreen: FC<AddConnectionScreenProps> = observer(
   function AddConnectionScreen({ navigation, route }) {
     const { connectionsStore } = useStores()
     const {
-      formState: { errors, isValid },
+      formState: { isValid },
       handleSubmit,
       control,
       trigger,
